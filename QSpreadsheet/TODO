@@ -1,0 +1,26 @@
+TODO LIST
+
+Fix any bugs
+
+Optimise the sort() code to use loops and arrays to allow a better interface and more/less keys and allow sorting by rows and columns
+   (basically make it more flexible and powerful)
+
+Enable reading and writing in other formats, excel workbook, csv, odt etc.
+
+Make copying/cutting and pasting for flexible
+    3.1. Allow copying/cutting of multiple selections lists
+    3.2. Allow pasting into a selection size that is not the same size as the clipboard
+
+Expand spreadsheet size -> make number of rows more than 999 and columns more than 26
+
+If possible, change Cell::setDirty() to a different, more logical name, such as setRecalcNeeded() ----- done
+
+May need to check cell reference is not out of range when reading file.
+
+Expand Cell::evalexpression to allow JS style code
+
+Research, test and add other neccessary functions
+
+Write configure files, makefiles. etc.
+
+Research the mutable keyword
