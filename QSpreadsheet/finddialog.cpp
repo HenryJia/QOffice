@@ -3,8 +3,8 @@
 findDialog::findDialog(QWidget *parent) : QDialog(parent)
 {
     setupUi(this);
-    connect(findNextButton, SIGNAL(clicked()), this, SLOT(findNextButton()));
-    connect(findPreviousButton, SIGNAL(clicked()), this, SLOT(findPreviousButton()));
+    connect(findNextButton, SIGNAL(clicked()), this, SLOT(findNextButtonClicked()));
+    connect(findPreviousButton, SIGNAL(clicked()), this, SLOT(findPreviousButtonClicked()));
 }
 
 void findDialog::findNextButtonClicked()

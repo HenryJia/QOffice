@@ -48,6 +48,8 @@ private:
     void setFormula(int row, int column, const QString &formula);
 
     bool autoRecalc;
+    int lastSearchRow;
+    int lastSearchColumn;
 };
 
 #endif // SPREADSHEET_H

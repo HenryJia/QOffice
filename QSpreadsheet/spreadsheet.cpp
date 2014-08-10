@@ -10,7 +10,8 @@
 Spreadsheet::Spreadsheet(QWidget *parent) : QTableWidget(parent)
 {
     autoRecalc = true;
-
+    lastSearchRow = -1;
+    lastSearchColumn = -1;
     setItemPrototype(new Cell);
     setSelectionMode(ContiguousSelection);
 
@@ -232,8 +233,8 @@ void Spreadsheet::findNext(const QString &str, Qt::CaseSensitivity cs)
 {
     int row, column;
     restart:
-    row = currentRow();
-    column = currentColumn() + 1;
+    row = lastSearchRow == -1 ? currentRow() : lastSearchRow;
+    column = lastSearchColumn == -1 ? currentColumn() + 1 : lastSearchColumn + 1;
     while(row < rowCount)
     {
         while(column < columnCount)
@@ -242,6 +243,8 @@ void Spreadsheet::findNext(const QString &str, Qt::CaseSensitivity cs)
             {
                 clearSelection();
                 setCurrentCell(row, column);
+                lastSearchRow = row;
+                lastSearchColumn = column;
                 activateWindow();
                 return;
             }
@@ -254,7 +257,8 @@ void Spreadsheet::findNext(const QString &str, Qt::CaseSensitivity cs)
     int r = QMessageBox::warning(this, tr("QSpreadsheet"), tr("Bottom of spreadsheet reached. Restart searching from top?"), QMessageBox::Yes | QMessageBox::No);
     if(r == QMessageBox::Yes)
     {
-        setCurrentCell(0, 0);
+        lastSearchRow = 0;
+        lastSearchColumn = 0;
         goto restart;
     }
 }
@@ -263,8 +267,8 @@ void Spreadsheet::findPrevious(const QString &str, Qt::CaseSensitivity cs)
 {
     int row, column;
     restart:
-    row = currentRow();
-    column = currentColumn() + 1;
+    row = lastSearchRow == -1 ? currentRow() : lastSearchRow;
+    column = lastSearchColumn == -1 ? currentColumn() - 1 : lastSearchColumn -1;
     while(row >= 0)
     {
         while(column >= 0)
@@ -273,6 +277,8 @@ void Spreadsheet::findPrevious(const QString &str, Qt::CaseSensitivity cs)
             {
                 clearSelection();
                 setCurrentCell(row, column);
+                lastSearchRow = row;
+                lastSearchColumn = column;
                 activateWindow();
                 return;
             }
@@ -285,7 +291,8 @@ void Spreadsheet::findPrevious(const QString &str, Qt::CaseSensitivity cs)
     int r = QMessageBox::warning(this, tr("QSpreadsheet"), tr("Top of spreadsheet reached. Restart searching from bottom?"), QMessageBox::Yes | QMessageBox::No);
     if(r == QMessageBox::Yes)
     {
-        setCurrentCell(0, 0);
+        lastSearchRow = rowCount -1;
+        lastSearchColumn = columnCount - 1;
         goto restart;
     }
 }
