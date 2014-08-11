@@ -126,7 +126,7 @@ void mainWindow::createActions()
     connect(findAction, SIGNAL(triggered()), this, SLOT(find()));
 
     goToCellAction = new QAction(tr("&Go to cell"), this);
-    goToCellAction->setIcon(QIcon("images/gotocell.png"));
+    goToCellAction->setIcon(QIcon("images/goto.png"));
     goToCellAction->setShortcut(tr("Ctrl+G"));
     goToCellAction->setStatusTip(tr("Go to a specified cell."));
     connect(goToCellAction, SIGNAL(triggered()), this, SLOT(goToCell()));
