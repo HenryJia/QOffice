@@ -234,7 +234,7 @@ void Spreadsheet::findNext(const QString &str, Qt::CaseSensitivity cs)
     int row, column;
     restart:
     row = lastSearchRow == -1 ? currentRow() : lastSearchRow;
-    column = lastSearchColumn == -1 ? currentColumn() + 1 : lastSearchColumn + 1;
+    column = lastSearchColumn == -1 ? currentColumn() : lastSearchColumn;
     while(row < rowCount)
     {
         while(column < columnCount)
@@ -244,7 +244,7 @@ void Spreadsheet::findNext(const QString &str, Qt::CaseSensitivity cs)
                 clearSelection();
                 setCurrentCell(row, column);
                 lastSearchRow = row;
-                lastSearchColumn = column;
+                lastSearchColumn = column + 1;
                 activateWindow();
                 return;
             }
@@ -268,7 +268,7 @@ void Spreadsheet::findPrevious(const QString &str, Qt::CaseSensitivity cs)
     int row, column;
     restart:
     row = lastSearchRow == -1 ? currentRow() : lastSearchRow;
-    column = lastSearchColumn == -1 ? currentColumn() - 1 : lastSearchColumn -1;
+    column = lastSearchColumn == -1 ? currentColumn() : lastSearchColumn;
     while(row >= 0)
     {
         while(column >= 0)
@@ -278,7 +278,7 @@ void Spreadsheet::findPrevious(const QString &str, Qt::CaseSensitivity cs)
                 clearSelection();
                 setCurrentCell(row, column);
                 lastSearchRow = row;
-                lastSearchColumn = column;
+                lastSearchColumn = column == 0 ? -2 : column - 1;
                 activateWindow();
                 return;
             }
@@ -291,7 +291,7 @@ void Spreadsheet::findPrevious(const QString &str, Qt::CaseSensitivity cs)
     int r = QMessageBox::warning(this, tr("QSpreadsheet"), tr("Top of spreadsheet reached. Restart searching from bottom?"), QMessageBox::Yes | QMessageBox::No);
     if(r == QMessageBox::Yes)
     {
-        lastSearchRow = rowCount -1;
+        lastSearchRow = rowCount - 1;
         lastSearchColumn = columnCount - 1;
         goto restart;
     }
