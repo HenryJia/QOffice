@@ -12,8 +12,10 @@
 #include <QMutableStringListIterator>
 #include <QTableWidgetSelectionRange>
 #include <QSettings>
+#include <QVBoxLayout>
+#include <QDockWidget>
 
-#include "finddialog.h"
+#include "findandreplacewidget.h"
 #include "gotocelldialog.h"
 #include "sortdialog.h"
 #include "spreadsheet.h"
@@ -24,6 +26,7 @@ QStringList mainWindow::recentFiles;
 
 mainWindow::mainWindow()
 {
+
     spreadsheet = new Spreadsheet;
     setCentralWidget(spreadsheet);
 
@@ -35,7 +38,7 @@ mainWindow::mainWindow()
 
     readSettings();
 
-    searchDialog = 0;
+    findDockWidget = nullptr;
 
     setWindowIcon(QIcon("images/icon.png"));
     setCurrentFile("");
@@ -388,17 +391,18 @@ void mainWindow::openRecentFile()
 
 void mainWindow::find()
 {
-    //This is a non-modal dialog, which means that the main window is still usable whilst this dialog is open
-    if(!searchDialog)
+    if(!findDockWidget)
     {
-        searchDialog = new findDialog(this);
-        connect(searchDialog, SIGNAL(findNext(const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(findNext(const QString &, Qt::CaseSensitivity)));
-        connect(searchDialog, SIGNAL(findPrevious(const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(findPrevious(const QString &, Qt::CaseSensitivity)));
+        findDockWidget = new QDockWidget(tr("Find:"), this);
+        findDockWidget->setAllowedAreas(Qt::AllDockWidgetAreas);
+        addDockWidget(Qt::BottomDockWidgetArea, findDockWidget);
+        searchAndReplaceWidget = new findAndReplaceWidget(this);
+        connect(searchAndReplaceWidget, SIGNAL(findNext(const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(findNext(const QString &, Qt::CaseSensitivity)));
+        connect(searchAndReplaceWidget, SIGNAL(findPrevious(const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(findPrevious(const QString &, Qt::CaseSensitivity)));
+        findDockWidget->setWidget(searchAndReplaceWidget);
     }
-
-    searchDialog->show();
-    searchDialog->raise();
-    searchDialog->activateWindow();
+    if(!findDockWidget->isVisible())
+        findDockWidget->show();
 }
 
 void mainWindow::goToCell()

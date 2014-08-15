@@ -15,11 +15,15 @@
 class QAction;
 class QLabel;
 class QStringList;
-class findDialog;
-class Spreadsheet;
 class QMenu;
 class QToolBar;
 class QString;
+class QVBoxLayout;
+class QDockWidget;
+
+class findDialog;
+class Spreadsheet;
+class findAndReplaceWidget;
 
 class mainWindow : public QMainWindow
 {
@@ -59,6 +63,8 @@ private:
 
     Spreadsheet * spreadsheet;
     findDialog *searchDialog;
+    findAndReplaceWidget *searchAndReplaceWidget;
+    QDockWidget *findDockWidget;
     QLabel *locationLabel;
     QLabel *formulaLabel;
     static QStringList recentFiles;
