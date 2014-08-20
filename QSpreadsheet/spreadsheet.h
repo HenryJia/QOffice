@@ -32,6 +32,8 @@ public slots:
     void setAutoRecalculate(bool recalc);
     void findNext(const QString &str, Qt::CaseSensitivity cs);
     void findPrevious(const QString &str, Qt::CaseSensitivity cs);
+    void replace(const QString &replaceStr, const QString &keyWords, Qt::CaseSensitivity cs);
+    void replaceAll(const QString &replaceStr, const QString &keyWords, Qt::CaseSensitivity cs);
 
 signals:
     void modified();

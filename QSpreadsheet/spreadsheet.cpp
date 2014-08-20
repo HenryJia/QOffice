@@ -297,6 +297,30 @@ void Spreadsheet::findPrevious(const QString &str, Qt::CaseSensitivity cs)
     }
 }
 
+void Spreadsheet::replace(const QString &replaceStr, const QString &keyWords, Qt::CaseSensitivity cs)
+{
+    if(!text(currentRow(), currentColumn()).contains(keyWords, cs))
+        findNext(keyWords, cs);
+    QString str = cell(currentRow(), currentColumn())->data(Qt::EditRole).toString();
+    str.replace(keyWords, replaceStr, cs);
+    cell(currentRow(), currentColumn())->setData(Qt::EditRole, str);
+}
+
+void Spreadsheet::replaceAll(const QString &replaceStr, const QString &keyWords, Qt::CaseSensitivity cs)
+{
+    for(int row = 0; row < rowCount; row++)
+    {
+        for(int column = 0; column < columnCount; column++)
+        {
+            if(text(row, column).contains(keyWords, cs))
+            {
+                replace(replaceStr, keyWords, cs);
+
+            }
+        }
+    }
+}
+
 void Spreadsheet::recalculate()
 {
     for(int row = 0; row < rowCount; row++)

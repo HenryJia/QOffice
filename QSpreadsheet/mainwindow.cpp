@@ -394,11 +394,13 @@ void mainWindow::find()
     if(!findDockWidget)
     {
         findDockWidget = new QDockWidget(tr("Find:"), this);
-        findDockWidget->setAllowedAreas(Qt::AllDockWidgetAreas);
+        findDockWidget->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);
         addDockWidget(Qt::BottomDockWidgetArea, findDockWidget);
         searchAndReplaceWidget = new findAndReplaceWidget(this);
         connect(searchAndReplaceWidget, SIGNAL(findNext(const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(findNext(const QString &, Qt::CaseSensitivity)));
         connect(searchAndReplaceWidget, SIGNAL(findPrevious(const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(findPrevious(const QString &, Qt::CaseSensitivity)));
+        connect(searchAndReplaceWidget, SIGNAL(replace(const QString &, const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(replace(const QString &, const QString &, Qt::CaseSensitivity)));
+        connect(searchAndReplaceWidget, SIGNAL(replaceAll(const QString &, const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(replaceAll(const QString &, const QString &, Qt::CaseSensitivity)));
         findDockWidget->setWidget(searchAndReplaceWidget);
     }
     if(!findDockWidget->isVisible())

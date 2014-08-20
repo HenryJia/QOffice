@@ -14,9 +14,13 @@ public:
 signals:
     void findNext(const QString& str, Qt::CaseSensitivity cs);
     void findPrevious(const QString& str, Qt::CaseSensitivity cs);
+    void replace(const QString& replaceStr, const QString& keyWords, Qt::CaseSensitivity);
+    void replaceAll(const QString& replaceStr, const QString& keyWords, Qt::CaseSensitivity);
 private slots:
     void findNextButtonClicked();
     void findPreviousButtonClicked();
+    void replaceButtonClicked();
+    void replaceAllButtonClicked();
 };
 
 #endif // FINDANDREPLACEWIDGET_H
