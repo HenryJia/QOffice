@@ -314,8 +314,10 @@ void Spreadsheet::replaceAll(const QString &replaceStr, const QString &keyWords,
         {
             if(text(row, column).contains(keyWords, cs))
             {
-                replace(replaceStr, keyWords, cs);
-
+                QString str = cell(row, column)->data(Qt::EditRole).toString();
+                str.replace(keyWords, replaceStr, cs);
+                cell(row, column)->setData(Qt::EditRole, str);
+                setCurrentItem(cell(row, column));
             }
         }
     }

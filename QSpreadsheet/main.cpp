@@ -5,8 +5,6 @@
 #include <QSplashScreen>
 
 #include "mainwindow.h"
-#include "gotocelldialog.h"
-#include "finddialog.h"
 
 int main(int argc, char *argv[])
 {

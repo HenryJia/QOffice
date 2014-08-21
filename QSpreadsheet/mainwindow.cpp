@@ -35,10 +35,9 @@ mainWindow::mainWindow()
     createContextMenu();
     createToolBars();
     createStatusBar();
+    createOtherWidgets();
 
     readSettings();
-
-    findDockWidget = nullptr;
 
     setWindowIcon(QIcon("images/icon.png"));
     setCurrentFile("");
@@ -241,6 +240,17 @@ void mainWindow::createStatusBar()
     updateStatusBar();
 }
 
+void mainWindow::createOtherWidgets()
+{
+    searchAndReplaceWidget = new findAndReplaceWidget(this);
+    addDockWidget(Qt::BottomDockWidgetArea, searchAndReplaceWidget);
+    connect(searchAndReplaceWidget, SIGNAL(findNext(const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(findNext(const QString &, Qt::CaseSensitivity)));
+    connect(searchAndReplaceWidget, SIGNAL(findPrevious(const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(findPrevious(const QString &, Qt::CaseSensitivity)));
+    connect(searchAndReplaceWidget, SIGNAL(replace(const QString &, const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(replace(const QString &, const QString &, Qt::CaseSensitivity)));
+    connect(searchAndReplaceWidget, SIGNAL(replaceAll(const QString &, const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(replaceAll(const QString &, const QString &, Qt::CaseSensitivity)));
+    searchAndReplaceWidget->hide();
+}
+
 void mainWindow::updateStatusBar()
 {
     locationLabel->setText(spreadsheet->currentLocation());
@@ -391,20 +401,8 @@ void mainWindow::openRecentFile()
 
 void mainWindow::find()
 {
-    if(!findDockWidget)
-    {
-        findDockWidget = new QDockWidget(tr("Find:"), this);
-        findDockWidget->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea);
-        addDockWidget(Qt::BottomDockWidgetArea, findDockWidget);
-        searchAndReplaceWidget = new findAndReplaceWidget(this);
-        connect(searchAndReplaceWidget, SIGNAL(findNext(const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(findNext(const QString &, Qt::CaseSensitivity)));
-        connect(searchAndReplaceWidget, SIGNAL(findPrevious(const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(findPrevious(const QString &, Qt::CaseSensitivity)));
-        connect(searchAndReplaceWidget, SIGNAL(replace(const QString &, const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(replace(const QString &, const QString &, Qt::CaseSensitivity)));
-        connect(searchAndReplaceWidget, SIGNAL(replaceAll(const QString &, const QString &, Qt::CaseSensitivity)), spreadsheet, SLOT(replaceAll(const QString &, const QString &, Qt::CaseSensitivity)));
-        findDockWidget->setWidget(searchAndReplaceWidget);
-    }
-    if(!findDockWidget->isVisible())
-        findDockWidget->show();
+    if(!searchAndReplaceWidget->isVisible())
+        searchAndReplaceWidget->show();
 }
 
 void mainWindow::goToCell()

@@ -1,6 +1,6 @@
 #include "findandreplacewidget.h"
 
-findAndReplaceWidget::findAndReplaceWidget(QWidget *parent) : QWidget(parent)
+findAndReplaceWidget::findAndReplaceWidget(QWidget *parent) : QDockWidget(parent)
 {
     setupUi(this);
     connect(findNextButton, SIGNAL(clicked()), this, SLOT(findNextButtonClicked()));

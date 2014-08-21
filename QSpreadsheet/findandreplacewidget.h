@@ -1,11 +1,11 @@
 #ifndef FINDANDREPLACEWIDGET_H
 #define FINDANDREPLACEWIDGET_H
 
-#include <QWidget>
+#include <QDockWidget>
 
 #include "ui_findandreplacewidget.h"
 
-class findAndReplaceWidget : public QWidget, public Ui::findAndReplaceWidget
+class findAndReplaceWidget : public QDockWidget, public Ui::findAndReplaceWidget
 {
     Q_OBJECT
 

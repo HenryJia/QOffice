@@ -52,6 +52,7 @@ private:
     void createContextMenu();
     void createToolBars();
     void createStatusBar();
+    void createOtherWidgets();
     void readSettings();
     void writeSettings();
     bool okToContinue();
@@ -62,9 +63,7 @@ private:
     QString strippedName(const QString &fullFileName);
 
     Spreadsheet * spreadsheet;
-    findDialog *searchDialog;
     findAndReplaceWidget *searchAndReplaceWidget;
-    QDockWidget *findDockWidget;
     QLabel *locationLabel;
     QLabel *formulaLabel;
     static QStringList recentFiles;
