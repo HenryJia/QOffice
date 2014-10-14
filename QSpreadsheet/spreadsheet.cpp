@@ -97,7 +97,7 @@ bool Spreadsheet::readFile(const QString &fileName)
         return false;
     }
     QDataStream in(&file);
-    in.setVersion(QDataStream::Qt_5_3);
+    in.setVersion(QDataStream::Qt_4_8);
 
     quint32 magic;
     in >> magic;
@@ -132,7 +132,7 @@ bool Spreadsheet::writeFile(const QString &fileName)
         return false;
     }
     QDataStream out(&file);
-    out.setVersion(QDataStream::Qt_5_3);
+    out.setVersion(QDataStream::Qt_4_8);
 
     out << quint32(magicNumber);
 
@@ -197,7 +197,7 @@ void Spreadsheet::paste()
     for(int i = 0; i < numRows; i++)
     {
         QStringList columns = rows[i].split('\t');
-        for(int j; j < numColumns; j++)
+        for(int j = 0; j < numColumns; j++)
         {
             int row = range.topRow() + i;
             int column = range.leftColumn() + j;
