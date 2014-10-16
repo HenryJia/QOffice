@@ -1,6 +1,9 @@
 #include <QStringList>
+#include <vector>
 
 #include "cell.h"
+
+using namespace std;
 
 Cell::Cell()
 {
@@ -68,11 +71,9 @@ QVariant Cell::value() const
             QString expr = formulaStr.mid(1);
             expr.replace(" ", "");
             expr.append(QChar::Null);
-
-            int pos = 0;
-            cachedValue = evalExpression(expr, pos);
-            if(expr[pos] != QChar::Null)
-                cachedValue = Invalid;
+            cachedValue = evalExpression(expr, 0);
+            //if(expr[pos] != QChar::Null)
+            //    cachedValue = Invalid;
         }
         else
         {
@@ -87,33 +88,121 @@ QVariant Cell::value() const
     return cachedValue;
 }
 
-QVariant Cell::evalExpression(const QString &str, int &pos) const
-{
-    QVariant result = evalTerm(str, pos);
-    while(str[pos] != QChar::Null)
-    {
-        QChar op = str[pos];
-        if(op != '+' && op != '-')
-            return result;
-        pos++;
+//Need to edit this to use C++11
 
-        QVariant term = evalTerm(str, pos);
-        if(result.type() == QVariant::Double && term.type() == QVariant::Double)
+QVariant Cell::evalExpression(const QString &str, int pos) const
+{
+    vector <QVariant> variables;
+    vector <QString> operators;
+    QString *number = new QString;
+    QString parenthesis;
+    int parenthesisPos = pos;
+    int tempPos = pos;
+    // Find Aall the digits of the numbers
+    for(; str[tempPos] != QChar::Null; tempPos++)
+    {
+        if(str[tempPos].isNumber() || str[pos] == '.')
+            number->append(str[tempPos]);
+        else //if(number->size() != 0)
         {
-            if(op == '+')
-                return result.toDouble() + term.toDouble();
+            // We have found the end of the number, so we convert the string
+            // of digits into a double and push it on to the variable stack
+            // We then delete the number and move on to finding the next number
+            variables.push_back(number->toDouble());
+            delete number;
+            number = new QString;
+            // We then push all the operators and parenthesis on to a separate stack
+            if(str[tempPos] == '(')
+            {
+                operators.push_back(str[tempPos]);
+                operators.back().append(str[tempPos]);
+            }
+            else if(str[tempPos - 1] == ')')
+                operators.back().append(str[tempPos]);
             else
-                return result.toDouble() - term.toDouble();
+                operators.push_back(str[tempPos]);
         }
-        else
-            result = Invalid;
+        //else
+            //return Invalid;
     }
-    return result;
+    variables.push_back(number->toDouble());
+    delete number;
+    // Find Parenthesis And Loop The Function To Calculate All Values Within The Parenthesis
+    tempPos = pos;
+    while(str[tempPos] != QChar::Null)
+    {
+        if(str[tempPos] == '(')
+        {
+            // First we separate the expression in the Parenthesis as a
+            // separate string and pass it to this function.
+            tempPos++;
+            while(str[tempPos] != QChar::Null)
+            {
+                if(str[tempPos] == ')')
+                    break;
+                parenthesis.append(str[tempPos]);
+                tempPos++;
+            }
+            // Then we remove the values within the parenthesis apart from the first one which we set to the value of the parenthesis
+            // We also remove the parenthesis
+            for(; !operators.at(parenthesisPos).contains('('); parenthesisPos++);
+            operators.at(parenthesisPos).chop(1);
+            parenthesisPos++;
+            variables.at(parenthesisPos) = evalExpression(parenthesis, 0);
+            operators.erase(operators.begin() +  parenthesisPos);
+            parenthesisPos++;
+            for(; !operators.at(parenthesisPos - 1).contains(')'); parenthesisPos++)
+            {
+                variables.erase(variables.begin() + parenthesisPos);
+                if(!operators.at(parenthesisPos).contains(')'))
+                    operators.erase(operators.begin() +  parenthesisPos);
+            }
+            operators.at(parenthesisPos -  1).remove(0,0);
+        }
+        tempPos++;
+    }
+    for(int i = 0; i < operators.size(); i++)
+    {
+        if(operators.at(i) == "/")
+        {
+            if(variables.at(i + 1) == 0)
+                return Invalid;
+            variables.at(i) = variables.at(i).toDouble() / variables.at(i + 1).toDouble();
+            variables.erase(variables.begin() +  (i + 1));
+            operators.erase(operators.begin() +  i);
+        }
+    }
+    for(int i = 0; i < operators.size(); i++)
+    {
+        if(operators.at(i) == "*")
+        {
+            variables.at(i) = variables.at(i).toDouble() * variables.at(i + 1).toDouble();
+            variables.erase(variables.begin() +  i + 1);
+            operators.erase(operators.begin() +  i);
+        }
+    }
+    for(int i = 0; i < operators.size(); i++)
+    {
+        if(operators.at(i) == "+")
+        {
+            variables.at(i) = variables.at(i).toDouble() + variables.at(i + 1).toDouble();
+            variables.erase(variables.begin() +  i + 1);
+            operators.erase(operators.begin() +  i);
+        }
+        else if(operators.at(i) == "-")
+        {
+            variables.at(i) = variables.at(i).toDouble() + variables.at(i - 1).toDouble();
+            variables.erase(variables.begin() +  i + 1);
+            operators.erase(operators.begin() +  i);
+        }
+    }
+    return variables.front();
 }
 
 QVariant Cell::evalTerm(const QString &str, int &pos) const
 {
     QVariant result = evalFactor(str, pos);
+    QVariant finalResult = result;
     while(str[pos] != QChar::Null)
     {
         QChar op = str[pos];
@@ -125,19 +214,19 @@ QVariant Cell::evalTerm(const QString &str, int &pos) const
         if(result.type() == QVariant::Double && factor.type() == QVariant::Double)
         {
             if(op == '*')
-                return result.toDouble() * factor.toDouble();
+                finalResult = result.toDouble() * factor.toDouble();
             else
             {
                 if(factor.toDouble() == 0.0)
                     result = Invalid;
                 else
-                    return result.toDouble() - factor.toDouble();
+                    finalResult = result.toDouble() - factor.toDouble();
             }
         }
         else
             result = Invalid;
     }
-    return result;
+    return finalResult;
 }
 
 QVariant Cell::evalFactor(const QString &str, int &pos) const
