@@ -94,74 +94,79 @@ QVariant Cell::evalExpression(const QString &str, int pos) const
 {
     vector <QVariant> variables;
     vector <QString> operators;
+    vector <float> leftParenthesis;
+    vector <float> rightParenthesis;
     QString *number = new QString;
-    QString parenthesis;
-    int parenthesisPos = pos;
+    QString *parenthesisString = new QString;
+    //int parenthesisPos = pos;
     int tempPos = pos;
     // Find Aall the digits of the numbers
     for(; str[tempPos] != QChar::Null; tempPos++)
     {
         if(str[tempPos].isNumber() || str[pos] == '.')
             number->append(str[tempPos]);
-        else //if(number->size() != 0)
+        else
         {
             // We have found the end of the number, so we convert the string
             // of digits into a double and push it on to the variable stack
             // We then delete the number and move on to finding the next number
-            variables.push_back(number->toDouble());
-            delete number;
-            number = new QString;
+            if(number->size() > 0)
+            {
+                variables.push_back(number->toDouble());
+                delete number;
+                number = new QString;
+            }
             // We then push all the operators and parenthesis on to a separate stack
             if(str[tempPos] == '(')
-            {
-                operators.push_back(str[tempPos]);
-                operators.back().append(str[tempPos]);
-            }
-            else if(str[tempPos - 1] == ')')
-                operators.back().append(str[tempPos]);
+                leftParenthesis.push_back(operators.size());
+            else if (str[tempPos] == ')')
+                rightParenthesis.push_back(operators.size());
             else
                 operators.push_back(str[tempPos]);
         }
         //else
             //return Invalid;
     }
-    variables.push_back(number->toDouble());
+    if(number->size() != 0)
+        variables.push_back(number->toDouble());
     delete number;
     // Find Parenthesis And Loop The Function To Calculate All Values Within The Parenthesis
     tempPos = pos;
-    while(str[tempPos] != QChar::Null)
+    /*for(int i = 0; i < leftParenthesis.size(); i++)
     {
+        for(int j = leftParenthesis.at(i) + 0.5; j < rightParenthesis.at(i); j++)
         if(str[tempPos] == '(')
         {
             // First we separate the expression in the Parenthesis as a
             // separate string and pass it to this function.
             tempPos++;
-            while(str[tempPos] != QChar::Null)
+            while(str[tempPos] != QChar::Null && str[tempPos] != ')')
             {
-                if(str[tempPos] == ')')
-                    break;
-                parenthesis.append(str[tempPos]);
+                parenthesisString->append(str[tempPos]);
                 tempPos++;
             }
             // Then we remove the values within the parenthesis apart from the first one which we set to the value of the parenthesis
             // We also remove the parenthesis
-            for(; !operators.at(parenthesisPos).contains('('); parenthesisPos++);
-            operators.at(parenthesisPos).chop(1);
+            /*for(; parenthesis.at(parenthesisPos) != "(" && parenthesisPos < parenthesis.size(); parenthesisPos++);
+
+            variables.at(parenthesisPos) = evalExpression(*parenthesisString, 0);
+            delete parenthesisString;
+            parenthesisString = new QString;
+
+            parenthesis.erase(parenthesis.begin() + parenthesisPos);
+            operators.erase(operators.begin() + parenthesisPos);
             parenthesisPos++;
-            variables.at(parenthesisPos) = evalExpression(parenthesis, 0);
-            operators.erase(operators.begin() +  parenthesisPos);
-            parenthesisPos++;
-            for(; !operators.at(parenthesisPos - 1).contains(')'); parenthesisPos++)
+            while(parenthesis.at(parenthesisPos) != ")" && parenthesisPos < parenthesis.size())
             {
                 variables.erase(variables.begin() + parenthesisPos);
-                if(!operators.at(parenthesisPos).contains(')'))
-                    operators.erase(operators.begin() +  parenthesisPos);
+                operators.erase(operators.begin() +  parenthesisPos);
             }
-            operators.at(parenthesisPos -  1).remove(0,0);
+            parenthesis.erase(parenthesis.begin() + parenthesisPos);
+            variables.erase(variables.begin() + parenthesisPos);
         }
         tempPos++;
-    }
-    for(int i = 0; i < operators.size(); i++)
+    }*/
+    for(int i = 0; i < operators.size();  )
     {
         if(operators.at(i) == "/")
         {
@@ -171,8 +176,10 @@ QVariant Cell::evalExpression(const QString &str, int pos) const
             variables.erase(variables.begin() +  (i + 1));
             operators.erase(operators.begin() +  i);
         }
+        else
+            i++;
     }
-    for(int i = 0; i < operators.size(); i++)
+    for(int i = 0; i < operators.size(); )
     {
         if(operators.at(i) == "*")
         {
@@ -180,8 +187,10 @@ QVariant Cell::evalExpression(const QString &str, int pos) const
             variables.erase(variables.begin() +  i + 1);
             operators.erase(operators.begin() +  i);
         }
+        else
+            i++;
     }
-    for(int i = 0; i < operators.size(); i++)
+    for(int i = 0; i < operators.size(); )
     {
         if(operators.at(i) == "+")
         {
@@ -195,6 +204,8 @@ QVariant Cell::evalExpression(const QString &str, int pos) const
             variables.erase(variables.begin() +  i + 1);
             operators.erase(operators.begin() +  i);
         }
+        else
+            i++;
     }
     return variables.front();
 }
