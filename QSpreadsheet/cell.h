@@ -17,9 +17,7 @@ public:
 
 private:
     QVariant value() const;
-    QVariant evalExpression(const QString &str, int pos) const;
-    QVariant evalTerm(const QString &str, int &pos) const;
-    QVariant evalFactor(const QString &str, int &pos) const;
+    QVariant evalExpression(QString str, int pos) const;
     const QVariant Invalid;
 
     mutable QVariant cachedValue;
