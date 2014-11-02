@@ -1,4 +1,4 @@
-#include <QStringList>
+#include <QString>
 #include <vector>
 
 #include "cell.h"
@@ -97,11 +97,11 @@ QVariant Cell::evalExpression(QString str, int pos) const
     vector <int> leftParenthesisPos;
     QString *number = new QString;
     QString *parenthesisString = new QString;
-    //int parenthesisPos = pos;
-    int tempPos = pos;
+    QSet<QChar> acceptedOperators;
+    acceptedOperators<<'+'<<'-'<<'*'<<'/'<<QChar::Null;
 
     // Deal with any parenthesis
-    for(int i = pos; str[tempPos] != QChar::Null && i < str.size(); i++)
+    for(int i = pos; i < str.size(); i++)
     {
         if(str[i] == '(')
             leftParenthesisPos.push_back(i);
@@ -110,9 +110,11 @@ QVariant Cell::evalExpression(QString str, int pos) const
             // This does not work yet if str starts with a bracket. Reasons not known yet.
             for(int j = leftParenthesisPos.back() + 1; j < i; j++)
                 parenthesisString->append(str[j]);
-            str.replace(*parenthesisString, QString::number(evalExpression(*parenthesisString, 0).toDouble()));
+            QString parenthesisValue = QString::number(evalExpression(*parenthesisString, 0).toDouble());
             parenthesisString->insert(0, '(');
             parenthesisString->append(')');
+            str.replace(*parenthesisString, parenthesisValue);
+            i = leftParenthesisPos.back();
             leftParenthesisPos.pop_back();
             delete parenthesisString;
             parenthesisString = new QString;
@@ -120,10 +122,14 @@ QVariant Cell::evalExpression(QString str, int pos) const
     }
 
     // Find All the digits of the numbers
-    for(; str[tempPos] != QChar::Null; tempPos++)
+    for(int i = 0; str[i] != QChar::Null; i++)
     {
-        if(str[tempPos].isNumber() || str[pos] == '.')
-            number->append(str[tempPos]);
+        if(i == 0)
+            number->append(str[i]);
+        else if(str[i].isNumber() || str[i] == '.' )
+            number->append(str[i]);
+        else if(str[i] == '-' && acceptedOperators.contains(str[i - 1]))
+            number->append(str[i]);
         else
         {
             // We have found the end of the number, so we convert the string
@@ -136,7 +142,7 @@ QVariant Cell::evalExpression(QString str, int pos) const
                 number = new QString;
             }
             // We then push all the operators and parenthesis on to a separate stack
-                operators.push_back(str[tempPos]);
+                operators.push_back(str[i]);
         }
         //else
             //return Invalid;
@@ -145,7 +151,6 @@ QVariant Cell::evalExpression(QString str, int pos) const
         variables.push_back(number->toDouble());
     delete number;
     // Perform calculations
-    tempPos = pos;
     for(int i = 0; i < operators.size();  )
     {
         if(operators.at(i) == '/')
@@ -180,7 +185,7 @@ QVariant Cell::evalExpression(QString str, int pos) const
         }
         else if(operators.at(i) == '-')
         {
-            variables.at(i) = variables.at(i).toDouble() + variables.at(i - 1).toDouble();
+            variables.at(i) = variables.at(i).toDouble() - variables.at(i + 1).toDouble();
             variables.erase(variables.begin() +  i + 1);
             operators.erase(operators.begin() +  i);
         }

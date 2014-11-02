@@ -3,6 +3,9 @@
 
 #include <QTableWidgetItem>
 
+class QVariant;
+class QString;
+
 class Cell : public QTableWidgetItem
 {
 public:
