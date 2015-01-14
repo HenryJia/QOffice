@@ -39,32 +39,32 @@ mainWindow::mainWindow()
 
     readSettings();
 
-    setWindowIcon(QIcon("images/icon.png"));
+    setWindowIcon(QIcon(":images/icon.png"));
     setCurrentFile("");
 }
 
 void mainWindow::createActions()
 {
     newFileAction = new QAction(tr("&New"), this);
-    newFileAction->setIcon(QIcon("images/new.png"));
+    newFileAction->setIcon(QIcon(":images/new.png"));
     newFileAction->setShortcut(QKeySequence::New);
     newFileAction->setStatusTip(tr("Create a new Spreadsheet file."));
     connect(newFileAction, SIGNAL(triggered()), this, SLOT(newFile()));
 
     openFileAction = new QAction(tr("&Open"), this);
-    openFileAction->setIcon(QIcon("images/open.png"));
+    openFileAction->setIcon(QIcon(":images/open.png"));
     openFileAction->setShortcut(QKeySequence::Open);
     openFileAction->setStatusTip(tr("Open a Spreadsheet file."));
     connect(openFileAction, SIGNAL(triggered()), this, SLOT(openFile()));
 
     saveFileAction = new QAction(tr("&Save"), this);
-    saveFileAction->setIcon(QIcon("images/save.png"));
+    saveFileAction->setIcon(QIcon(":images/save.png"));
     saveFileAction->setShortcut(QKeySequence::Save);
     saveFileAction->setStatusTip(tr("Save the current Spreadsheet file."));
     connect(saveFileAction, SIGNAL(triggered()), this, SLOT(saveFile()));
 
     saveAsFileAction = new QAction(tr("&Save As"), this);
-    saveAsFileAction->setIcon(QIcon("images/saveas.png"));
+    saveAsFileAction->setIcon(QIcon(":images/saveas.png"));
     saveAsFileAction->setShortcut(QKeySequence::SaveAs);
     saveAsFileAction->setStatusTip(tr("Save the current Spreadsheet file in a different place."));
     connect(saveAsFileAction, SIGNAL(triggered()), this, SLOT(saveAsFile()));
@@ -104,31 +104,31 @@ void mainWindow::createActions()
     connect(selectColumnAction, SIGNAL(triggered()), spreadsheet, SLOT(selectCurrentColumn()));;
 
     cutAction = new QAction(tr("&Cut"), this);
-    cutAction->setIcon(QIcon("images/cut.png"));
+    cutAction->setIcon(QIcon(":images/cut.png"));
     cutAction->setShortcut(QKeySequence::Cut);
     cutAction->setStatusTip(tr("Cut text."));
     connect(cutAction, SIGNAL(triggered()), spreadsheet, SLOT(cut()));
 
     copyAction = new QAction(tr("&Copy"), this);
-    copyAction->setIcon(QIcon("images/copy.png"));
+    copyAction->setIcon(QIcon(":images/copy.png"));
     copyAction->setShortcut(QKeySequence::Copy);
     copyAction->setStatusTip(tr("Copy text."));
     connect(copyAction, SIGNAL(triggered()), spreadsheet, SLOT(copy()));
 
     pasteAction = new QAction(tr("&Paste"), this);
-    pasteAction->setIcon(QIcon("images/paste.png"));
+    pasteAction->setIcon(QIcon(":images/paste.png"));
     pasteAction->setShortcut(QKeySequence::Paste);
     pasteAction->setStatusTip(tr("Paste text."));
     connect(pasteAction, SIGNAL(triggered()), spreadsheet, SLOT(paste()));
 
     findAction = new QAction(tr("&Find"), this);
-    findAction->setIcon(QIcon("images/find.png"));
+    findAction->setIcon(QIcon(":images/find.png"));
     findAction->setShortcut(QKeySequence::Find);
     findAction->setStatusTip(tr("Find text."));
     connect(findAction, SIGNAL(triggered()), this, SLOT(find()));
 
     goToCellAction = new QAction(tr("&Go to cell"), this);
-    goToCellAction->setIcon(QIcon("images/goto.png"));
+    goToCellAction->setIcon(QIcon(":images/goto.png"));
     goToCellAction->setShortcut(tr("Ctrl+G"));
     goToCellAction->setStatusTip(tr("Go to a specified cell."));
     connect(goToCellAction, SIGNAL(triggered()), this, SLOT(goToCell()));
@@ -441,11 +441,7 @@ void mainWindow::about()
                        tr("<h2>"VERSION_STRING"</h2>"
                           "<p>"COPYRIGHT_STRING"</p>"
                           "<p>"ABOUT_STRING"</p>"
-                          "<p>"TEAM_STRING1"</p>"
-                          "<p>"TEAM_STRING2"</p>"
-                          "<p>"TEAM_STRING3"</p>"
-                          "<p>"TEAM_STRING4"</p>"
-                          "<p>"TEAM_STRING5"</p>"));
+                          "<p>"TEAM_STRING1"</p>"));
 }
 
 void mainWindow::writeSettings()

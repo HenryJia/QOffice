@@ -3,12 +3,8 @@
 
 #define VERSION_STRING "QSpreadSheet Alpha I Revision 1"
 #define COPYRIGHT_STRING "Copyright &copy CGS Developer Team"
-#define ABOUT_STRING "QSpreadSheet is a robust, multi-platoform spreadsheet program written in Qt by the CGS Developer team ->"
+#define ABOUT_STRING "QSpreadSheet is a robust, multi-platform spreadsheet program written in Qt by the CGS Developer team ->"
 #define TEAM_STRING1 "The Lead Developer        ->  Hengjian (Henry) Jia"
-#define TEAM_STRING2 "The Ideas Guy             ->  Samuel (Daisy) Jefferson Zhou"
-#define TEAM_STRING3 "The Python Developer      ->  Oliver Cullis"
-#define TEAM_STRING4 "The Jack-Of-All-Trades    ->  Theo Brown"
-#define TEAM_STRING5 "The Tester                ->  Vova Viner"
 
 #include <QMainWindow>
 
