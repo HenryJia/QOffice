@@ -46,25 +46,25 @@ mainWindow::mainWindow()
 void mainWindow::createActions()
 {
     newFileAction = new QAction(tr("&New"), this);
-    newFileAction->setIcon(QIcon(":images/new.png"));
+    newFileAction->setIcon(QIcon(":images/document-new.png"));
     newFileAction->setShortcut(QKeySequence::New);
     newFileAction->setStatusTip(tr("Create a new Spreadsheet file."));
     connect(newFileAction, SIGNAL(triggered()), this, SLOT(newFile()));
 
     openFileAction = new QAction(tr("&Open"), this);
-    openFileAction->setIcon(QIcon(":images/open.png"));
+    openFileAction->setIcon(QIcon(":images/document-open.png"));
     openFileAction->setShortcut(QKeySequence::Open);
     openFileAction->setStatusTip(tr("Open a Spreadsheet file."));
     connect(openFileAction, SIGNAL(triggered()), this, SLOT(openFile()));
 
     saveFileAction = new QAction(tr("&Save"), this);
-    saveFileAction->setIcon(QIcon(":images/save.png"));
+    saveFileAction->setIcon(QIcon(":images/document-save.png"));
     saveFileAction->setShortcut(QKeySequence::Save);
     saveFileAction->setStatusTip(tr("Save the current Spreadsheet file."));
     connect(saveFileAction, SIGNAL(triggered()), this, SLOT(saveFile()));
 
     saveAsFileAction = new QAction(tr("&Save As"), this);
-    saveAsFileAction->setIcon(QIcon(":images/saveas.png"));
+    saveAsFileAction->setIcon(QIcon(":images/-document-save-as.png"));
     saveAsFileAction->setShortcut(QKeySequence::SaveAs);
     saveAsFileAction->setStatusTip(tr("Save the current Spreadsheet file in a different place."));
     connect(saveAsFileAction, SIGNAL(triggered()), this, SLOT(saveAsFile()));
@@ -104,31 +104,31 @@ void mainWindow::createActions()
     connect(selectColumnAction, SIGNAL(triggered()), spreadsheet, SLOT(selectCurrentColumn()));;
 
     cutAction = new QAction(tr("&Cut"), this);
-    cutAction->setIcon(QIcon(":images/cut.png"));
+    cutAction->setIcon(QIcon(":images/edit-cut.png"));
     cutAction->setShortcut(QKeySequence::Cut);
     cutAction->setStatusTip(tr("Cut text."));
     connect(cutAction, SIGNAL(triggered()), spreadsheet, SLOT(cut()));
 
     copyAction = new QAction(tr("&Copy"), this);
-    copyAction->setIcon(QIcon(":images/copy.png"));
+    copyAction->setIcon(QIcon(":images/edit-copy.png"));
     copyAction->setShortcut(QKeySequence::Copy);
     copyAction->setStatusTip(tr("Copy text."));
     connect(copyAction, SIGNAL(triggered()), spreadsheet, SLOT(copy()));
 
     pasteAction = new QAction(tr("&Paste"), this);
-    pasteAction->setIcon(QIcon(":images/paste.png"));
+    pasteAction->setIcon(QIcon(":images/edit-paste.png"));
     pasteAction->setShortcut(QKeySequence::Paste);
     pasteAction->setStatusTip(tr("Paste text."));
     connect(pasteAction, SIGNAL(triggered()), spreadsheet, SLOT(paste()));
 
     findAction = new QAction(tr("&Find"), this);
-    findAction->setIcon(QIcon(":images/find.png"));
+    findAction->setIcon(QIcon(":images/edit-find.png"));
     findAction->setShortcut(QKeySequence::Find);
     findAction->setStatusTip(tr("Find text."));
     connect(findAction, SIGNAL(triggered()), this, SLOT(find()));
 
     goToCellAction = new QAction(tr("&Go to cell"), this);
-    goToCellAction->setIcon(QIcon(":images/goto.png"));
+    goToCellAction->setIcon(QIcon(":images/go-right.png"));
     goToCellAction->setShortcut(tr("Ctrl+G"));
     goToCellAction->setStatusTip(tr("Go to a specified cell."));
     connect(goToCellAction, SIGNAL(triggered()), this, SLOT(goToCell()));

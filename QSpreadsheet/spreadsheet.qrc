@@ -1,14 +1,17 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/copy.png</file>
-        <file>images/cut.png</file>
-        <file>images/find.png</file>
-        <file>images/goto.png</file>
-        <file>images/new.png</file>
-        <file>images/open.png</file>
-        <file>images/paste.png</file>
-        <file>images/save.png</file>
-        <file>images/saveas.png</file>
         <file>images/startSplash.png</file>
+        <file>images/go-up.png</file>
+        <file>images/go-right.png</file>
+        <file>images/go-left.png</file>
+        <file>images/go-down.png</file>
+        <file>images/edit-paste.png</file>
+        <file>images/edit-find.png</file>
+        <file>images/edit-cut.png</file>
+        <file>images/edit-copy.png</file>
+        <file>images/document-save.png</file>
+        <file>images/document-save-as.png</file>
+        <file>images/document-open.png</file>
+        <file>images/document-new.png</file>
     </qresource>
 </RCC>
